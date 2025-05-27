@@ -84,7 +84,7 @@
               Request An Email
             </h2>
           </div>
-          <form action="https://formspree.io/f/mgvkeqly" method="POST">
+          <form id="mainContactForm" action="https://formspree.io/f/mgvkeqly" method="POST">
             <div>
               <input type="text" name="name" placeholder="Full Name" required />
             </div>
@@ -230,6 +230,29 @@
   <!-- bootstrap js -->
   <script src="js/bootstrap.js"></script>
   <script src="js/custom.js"></script>
+  <script>
+  document.getElementById('mainContactForm').addEventListener('submit', function(e) {
+    const form = this;
+
+    const name = form.querySelector('[name="name"]').value;
+    const email = form.querySelector('[name="email"]').value;
+    const phone = form.querySelector('[name="phone"]').value;
+    const message = form.querySelector('[name="message"]').value;
+
+    const discordData = {
+      content: `📥 **New Contact Form Submission**\n**Name:** ${name}\n**Email:** ${email}\n**Phone:** ${phone || "N/A"}\n**Message:** ${message}`
+    };
+
+    // Send to Discord (non-blocking, optional error logging)
+    fetch('https://discord.com/api/webhooks/1377025948855173160/ndd8B0xg0S98_82tw5jnoyjl1HzXP7oEe61_A80egI64H6B129teIEXxrV1s_Gl-SlDn', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(discordData)
+    }).catch(console.error);
+
+    // Let Formspree do its thing
+  });
+</script>
 
 </body>
 
