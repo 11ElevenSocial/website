@@ -84,7 +84,7 @@
               Request An Email
             </h2>
           </div>
-          <form id="mainContactForm" action="https://formspree.io/f/mgvkeqly" method="POST">
+          <form id="mainContactForm">
             <div>
               <input type="text" name="name" placeholder="Full Name" required />
             </div>
@@ -102,6 +102,12 @@
               <button type="submit">SEND</button>
             </div>
           </form>
+<div id="popup" class="popup hidden">
+  <div class="popup-content">
+    ✅<br>
+    <strong>You will receive an email shortly!</strong>
+  </div>
+</div>
         </div>
       </div>
 
@@ -226,33 +232,101 @@
   <script src="js/jquery-3.4.1.min.js"></script>
   <!-- popper js -->
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
-  </script>
-  <!-- bootstrap js -->
-  <script src="js/bootstrap.js"></script>
-  <script src="js/custom.js"></script>
-  <script>
+<!-- EmailJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script>
+  emailjs.init("5a4DhSjpGhUCb0fod");
+</script>
+
+<script>
   document.getElementById('mainContactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
     const form = this;
 
     const name = form.querySelector('[name="name"]').value;
     const email = form.querySelector('[name="email"]').value;
-    const phone = form.querySelector('[name="phone"]').value;
+    const phone = form.querySelector('[name="phone"]').value || "N/A";
     const message = form.querySelector('[name="message"]').value;
 
-    const discordData = {
-      content: `📥 **New Contact Form Submission**\n**Name:** ${name}\n**Email:** ${email}\n**Phone:** ${phone || "N/A"}\n**Message:** ${message}`
-    };
+    // ✅ Show confirmation popup
+    const popup = document.getElementById("popup");
+    popup.classList.remove("hidden");
+    setTimeout(() => popup.classList.add("hidden"), 4000);
 
-    // Send to Discord (non-blocking, optional error logging)
-    fetch('https://discord.com/api/webhooks/1377025948855173160/ndd8B0xg0S98_82tw5jnoyjl1HzXP7oEe61_A80egI64H6B129teIEXxrV1s_Gl-SlDn', {
+    // ✅ Send to EmailJS if NOT @gmail.com
+    if (!email.endsWith("@gmail.com")) {
+      emailjs.send("service_11elevensocial", "template_nk251kr", {
+        from_name: name,
+        reply_to: email,
+        message: `Phone: ${phone}\nMessage: ${message}`
+      }).then(function(res) {
+        console.log("Email sent");
+      }, function(err) {
+        console.error("EmailJS Error:", err);
+      });
+    }
+
+    // ✅ Send to Discord for ALL
+    const webhook = atob("aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTM3NzAyNTk0ODg1NTE3MzE2MC9uZGQ4QjB4ZzBTOThfODJ0dzVqbm95amwxSHpYUDdvRWU2MV9BODBlZ0k2NEg2QjEyOXRlSUVYeHJWTXMvR2wtU2xEbg==");
+    fetch(webhook, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(discordData)
+      body: JSON.stringify({
+        content: `📥 **New Contact Submission**\n**Name:** ${name}\n**Email:** ${email}\n**Phone:** ${phone}\n**Message:** ${message}`
+      })
     }).catch(console.error);
 
-    // Let Formspree do its thing
+    form.reset();
   });
 </script>
+<!-- EmailJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script>
+  emailjs.init("5a4DhSjpGhUCb0fod");
+</script>
+
+<script>
+  document.getElementById('mainContactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = this;
+
+    const name = form.querySelector('[name="name"]').value;
+    const email = form.querySelector('[name="email"]').value;
+    const phone = form.querySelector('[name="phone"]').value || "N/A";
+    const message = form.querySelector('[name="message"]').value;
+
+    // ✅ Show confirmation popup
+    const popup = document.getElementById("popup");
+    popup.classList.remove("hidden");
+    setTimeout(() => popup.classList.add("hidden"), 4000);
+
+    // ✅ Send to EmailJS if NOT @gmail.com
+    if (!email.endsWith("@gmail.com")) {
+      emailjs.send("service_11elevensocial", "template_nk251kr", {
+        from_name: name,
+        reply_to: email,
+        message: `Phone: ${phone}\nMessage: ${message}`
+      }).then(function(res) {
+        console.log("Email sent");
+      }, function(err) {
+        console.error("EmailJS Error:", err);
+      });
+    }
+
+    // ✅ Send to Discord for ALL
+    const webhook = atob("aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTM3NzAyNTk0ODg1NTE3MzE2MC9uZGQ4QjB4ZzBTOThfODJ0dzVqbm95amwxSHpYUDdvRWU2MV9BODBlZ0k2NEg2QjEyOXRlSUVYeHJWTXMvR2wtU2xEbg==");
+    fetch(webhook, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        content: `📥 **New Contact Submission**\n**Name:** ${name}\n**Email:** ${email}\n**Phone:** ${phone}\n**Message:** ${message}`
+      })
+    }).catch(console.error);
+
+    form.reset();
+  });
+</script>
+
 
 </body>
 
